@@ -1,0 +1,83 @@
+$folder = "c:\flowers-салон\public\flower-photos"
+New-Item -ItemType Directory -Force -Path $folder | Out-Null
+
+$headers = @{ "User-Agent" = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" }
+
+# Только проверенные ID — букеты и цветы (Pexels + Unsplash)
+$sources = @(
+  @{ id = "931162";   src = "pexels" },
+  @{ id = "2879824";  src = "pexels" },
+  @{ id = "404139";   src = "pexels" },
+  @{ id = "1457812";  src = "pexels" },
+  @{ id = "736765";   src = "pexels" },
+  @{ id = "5686885";  src = "pexels" },
+  @{ id = "3689790";  src = "pexels" },
+  @{ id = "1158680";  src = "pexels" },
+  @{ id = "931154";   src = "pexels" },
+  @{ id = "931159";   src = "pexels" },
+  @{ id = "931155";   src = "pexels" },
+  @{ id = "1529853";  src = "pexels" },
+  @{ id = "1181519";  src = "pexels" },
+  @{ id = "1061147";  src = "pexels" },
+  @{ id = "1129653";  src = "pexels" },
+  @{ id = "2079977";  src = "pexels" },
+  @{ id = "3771637";  src = "pexels" },
+  @{ id = "3771641";  src = "pexels" },
+  @{ id = "4197438";  src = "pexels" },
+  @{ id = "4197440";  src = "pexels" },
+  @{ id = "4502963";  src = "pexels" },
+  @{ id = "4502964";  src = "pexels" },
+  @{ id = "5677991";  src = "pexels" },
+  @{ id = "5677992";  src = "pexels" },
+  @{ id = "5677993";  src = "pexels" },
+  @{ id = "931030";   src = "pexels" },
+  @{ id = "931036";   src = "pexels" },
+  @{ id = "931040";   src = "pexels" },
+  @{ id = "931044";   src = "pexels" },
+  @{ id = "931050";   src = "pexels" },
+  @{ id = "404122";   src = "pexels" },
+  @{ id = "931628";   src = "pexels" },
+  @{ id = "1572454591674"; src = "unsplash"; slug = "photo-1572454591674-2739f30d8c40" },
+  @{ id = "1490750967868"; src = "unsplash"; slug = "photo-1490750967868-88aa4486c946" },
+  @{ id = "1519225421980"; src = "unsplash"; slug = "photo-1519225421980-715cb0215aed" },
+  @{ id = "1487530811176"; src = "unsplash"; slug = "photo-1487530811176-3780de880c2d" },
+  @{ id = "1561181286"; src = "unsplash"; slug = "photo-1561181286-d4624fac8f85" },
+  @{ id = "1458920309815"; src = "unsplash"; slug = "photo-1458920309815-954b584cf600" },
+  @{ id = "1519378058454"; src = "unsplash"; slug = "photo-1519378058454-844a65949470" },
+  @{ id = "1582793988959"; src = "unsplash"; slug = "photo-1582793988959-11ea64727d92" }
+)
+
+$hashes = @{}
+$num = 0
+
+foreach ($s in $sources) {
+  if ($s.src -eq "pexels") {
+    $url = "https://images.pexels.com/photos/$($s.id)/pexels-photo-$($s.id).jpeg?auto=compress&cs=tinysrgb&w=1200"
+  } else {
+    $url = "https://images.unsplash.com/$($s.slug)?fm=jpg&q=85&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3"
+  }
+
+  $tmp = Join-Path $folder "_tmp.jpg"
+  try {
+    Invoke-WebRequest -Uri $url -OutFile $tmp -Headers $headers -UseBasicParsing -TimeoutSec 45
+    $sz = (Get-Item $tmp).Length
+    if ($sz -lt 15000) { Remove-Item $tmp; Write-Host "SKIP small: $($s.id)"; continue }
+    $hash = (Get-FileHash $tmp).Hash
+    if ($hashes.ContainsKey($hash)) {
+      Remove-Item $tmp
+      Write-Host "SKIP dup: $($s.id) = same as $($hashes[$hash])"
+      continue
+    }
+    $num++
+    $dest = Join-Path $folder ("flower-{0:D2}.jpg" -f $num)
+    Move-Item $tmp $dest -Force
+    $hashes[$hash] = $s.id
+    Write-Host "OK flower-$('{0:D2}' -f $num) <- $($s.id) ($sz bytes)"
+  } catch {
+    Write-Host "FAIL $($s.id): $_"
+    if (Test-Path $tmp) { Remove-Item $tmp }
+  }
+}
+
+Write-Host "`n=== DONE: $num unique photos in $folder ==="
+Get-ChildItem $folder -Filter "flower-*.jpg" | Select-Object Name, Length

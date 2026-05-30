@@ -1,0 +1,49 @@
+Set-Location "c:\flowers-салон\public\media\florist\images"
+
+$headers = @{ "User-Agent" = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" }
+
+# 25 unique sources: Pexels + Unsplash + Pixabay (different photo IDs)
+$sources = @(
+  @{ file = "unique-01-pink-roses-vase.jpg";       url = "https://images.pexels.com/photos/931162/pexels-photo-931162.jpeg?auto=compress&cs=tinysrgb&w=1200" },
+  @{ file = "unique-02-peonies-pink.jpg";          url = "https://images.pexels.com/photos/2879824/pexels-photo-2879824.jpeg?auto=compress&cs=tinysrgb&w=1200" },
+  @{ file = "unique-03-red-roses-bouquet.jpg";     url = "https://images.pexels.com/photos/404139/pexels-photo-404139.jpeg?auto=compress&cs=tinysrgb&w=1200" },
+  @{ file = "unique-04-white-roses.jpg";           url = "https://images.pexels.com/photos/1457812/pexels-photo-1457812.jpeg?auto=compress&cs=tinysrgb&w=1200" },
+  @{ file = "unique-05-tulips-yellow.jpg";         url = "https://images.pexels.com/photos/1457812/pexels-photo-1457812.jpeg?auto=compress&cs=tinysrgb&w=1200" },
+  @{ file = "unique-06-sunflowers.jpg";            url = "https://images.pexels.com/photos/736765/pexels-photo-736765.jpeg?auto=compress&cs=tinysrgb&w=1200" },
+  @{ file = "unique-07-lavender-field.jpg";        url = "https://images.pexels.com/photos/1029635/pexels-photo-1029635.jpeg?auto=compress&cs=tinysrgb&w=1200" },
+  @{ file = "unique-08-chrysanthemums.jpg";        url = "https://images.pexels.com/photos/5686885/pexels-photo-5686885.jpeg?auto=compress&cs=tinysrgb&w=1200" },
+  @{ file = "unique-09-orchids.jpg";               url = "https://images.pexels.com/photos/6284877/pexels-photo-6284877.jpeg?auto=compress&cs=tinysrgb&w=1200" },
+  @{ file = "unique-10-daisies.jpg";               url = "https://images.pexels.com/photos/5870315/pexels-photo-5870315.jpeg?auto=compress&cs=tinysrgb&w=1200" },
+  @{ file = "unique-11-wildflowers.jpg";           url = "https://images.pexels.com/photos/3689790/pexels-photo-3689790.jpeg?auto=compress&cs=tinysrgb&w=1200" },
+  @{ file = "unique-12-carnations.jpg";            url = "https://images.pexels.com/photos/1158680/pexels-photo-1158680.jpeg?auto=compress&cs=tinysrgb&w=1200" },
+  @{ file = "unique-13-lilies-white.jpg";          url = "https://images.pexels.com/photos/931066/pexels-photo-931066.jpeg?auto=compress&cs=tinysrgb&w=1200" },
+  @{ file = "unique-14-hydrangea-blue.jpg";        url = "https://images.unsplash.com/photo-1490750967868-88aa4486c946?fm=jpg&q=85&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3" },
+  @{ file = "unique-15-elegant-pink-bouquet.jpg";  url = "https://images.unsplash.com/photo-1572454591674-2739f30d8c40?fm=jpg&q=85&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3" },
+  @{ file = "unique-16-wedding-bouquet-white.jpg"; url = "https://images.unsplash.com/photo-1519225421980-715cb0215aed?fm=jpg&q=85&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3" },
+  @{ file = "unique-17-tulips-spring.jpg";         url = "https://images.unsplash.com/photo-1520763183423-f8867f567146?fm=jpg&q=85&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3" },
+  @{ file = "unique-18-peonies-macro.jpg";         url = "https://images.unsplash.com/photo-1582793988959-11ea64727d92?fm=jpg&q=85&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3" },
+  @{ file = "unique-19-rose-closeup.jpg";          url = "https://images.unsplash.com/photo-1518895949257-762f3673e6a4?fm=jpg&q=85&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3" },
+  @{ file = "unique-20-gift-box-roses.jpg";        url = "https://images.unsplash.com/photo-1567225597155-75e53f69326f?fm=jpg&q=85&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3" },
+  @{ file = "unique-21-florist-hands.jpg";         url = "https://images.unsplash.com/photo-1508610048655-a06b669a39ae?fm=jpg&q=85&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3" },
+  @{ file = "unique-22-packaging-bouquet.jpg";     url = "https://images.unsplash.com/photo-1592150621744-aca20da19c21?fm=jpg&q=85&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3" },
+  @{ file = "unique-23-flower-shop.jpg";           url = "https://images.unsplash.com/photo-1462275646658-60b8e9e9e3ea?fm=jpg&q=85&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3" },
+  @{ file = "unique-24-spring-mix.jpg";            url = "https://images.unsplash.com/photo-1490750967868-88aa4486c946?fm=jpg&q=85&w=1200&auto=format&fit=crop&ixlib=rb-4.1.0" },
+  @{ file = "unique-25-delivery-bouquet.jpg";      url = "https://images.unsplash.com/photo-1526047932273-341f58a3be51?fm=jpg&q=85&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3" }
+)
+
+$ok = 0; $fail = 0
+foreach ($s in $sources) {
+  Write-Host "DL $($s.file)..."
+  try {
+    Invoke-WebRequest -Uri $s.url -OutFile $s.file -Headers $headers -UseBasicParsing -TimeoutSec 60
+    $sz = (Get-Item $s.file).Length
+    if ($sz -gt 10000) { Write-Host "  OK $sz"; $ok++ } else { Write-Host "  TOO SMALL"; $fail++ }
+  } catch { Write-Host "  FAIL: $_"; $fail++ }
+}
+Write-Host "`nDone: $ok ok, $fail fail"
+
+# Check duplicates by hash
+Write-Host "`nDuplicate check:"
+Get-ChildItem unique-*.jpg | Get-FileHash | Group-Object Hash | Where-Object { $_.Count -gt 1 } | ForEach-Object {
+  Write-Host "DUPLICATE: $($_.Group.Name -join ', ')"
+}

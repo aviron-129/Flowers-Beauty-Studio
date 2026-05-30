@@ -1,0 +1,48 @@
+Set-Location "c:\flowers-салон\public\media\florist\images"
+$headers = @{ "User-Agent" = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" }
+
+# More Pexels IDs - diverse flower photos
+$pexelsIds = @(
+  931162, 2879824, 404139, 1457812, 736765, 1029635, 5686885, 6284877,
+  3689790, 1158680, 10620759, 10728731, 931154, 931159, 3641058, 4198026,
+  931069, 931153, 931155, 931157, 265906, 931060, 931058, 931056,
+  1071882, 931050, 158063, 931048, 931046, 931044, 2072730, 2072732,
+  2072733, 2072734, 2072736, 2072737, 2072738, 2072739, 2072740, 2072741
+)
+
+$downloaded = @{}
+$i = 0
+foreach ($id in $pexelsIds) {
+  $i++
+  $file = "pexels-$id.jpg"
+  if (Test-Path $file) { continue }
+  $url = "https://images.pexels.com/photos/$id/pexels-photo-$id.jpeg?auto=compress&cs=tinysrgb&w=1200"
+  try {
+    Invoke-WebRequest -Uri $url -OutFile $file -Headers $headers -UseBasicParsing -TimeoutSec 30
+    $hash = (Get-FileHash $file).Hash
+    $sz = (Get-Item $file).Length
+    if ($sz -lt 10000) { Remove-Item $file; continue }
+    if ($downloaded.ContainsKey($hash)) {
+      Write-Host "DUP skip $id (same as $($downloaded[$hash]))"
+      Remove-Item $file
+    } else {
+      $downloaded[$hash] = $id
+      Write-Host "OK $id -> $file ($sz)"
+    }
+  } catch {
+    # try alternate slug format
+    $url2 = "https://images.pexels.com/photos/$id/pexels-photo-$id.jpeg"
+    try {
+      Invoke-WebRequest -Uri $url2 -OutFile $file -Headers $headers -UseBasicParsing -TimeoutSec 30
+      $hash = (Get-FileHash $file).Hash
+      $sz = (Get-Item $file).Length
+      if ($sz -gt 10000 -and -not $downloaded.ContainsKey($hash)) {
+        $downloaded[$hash] = $id
+        Write-Host "OK2 $id ($sz)"
+      } else { Remove-Item $file -ErrorAction SilentlyContinue }
+    } catch {}
+  }
+}
+
+Write-Host "`nUnique count: $($downloaded.Count)"
+Get-ChildItem pexels-*.jpg | Select-Object Name, Length
