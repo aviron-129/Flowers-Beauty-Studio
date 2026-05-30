@@ -21,6 +21,8 @@ import { Footer } from "@/components/sections/Footer";
 import { FloatingCTA } from "@/components/sections/FloatingCTA";
 import { buildMessengerChannels } from "@/lib/messenger";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const data = await getLandingPageData();
   const messengerChannels = buildMessengerChannels(data.settings);

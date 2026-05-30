@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { loginAdmin } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as { email?: string; password?: string };
