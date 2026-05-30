@@ -16,28 +16,10 @@ export function Hero({ settings, messengerChannels }: HeroProps) {
   const { hero } = siteConfig;
 
   return (
-    <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
-      <div className="absolute inset-0 z-0">
-        {hero.video ? (
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            poster={hero.image}
-            className="absolute inset-0 w-full h-full object-cover"
-            aria-label="Видео: флорист собирает букет"
-          >
-            <source src={hero.video} type="video/mp4" />
-          </video>
-        ) : (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={hero.image} alt="Авторский букет цветов" className="absolute inset-0 w-full h-full object-cover" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-r from-sage-950/70 via-sage-900/50 to-sage-900/30" />
-      </div>
+    <section className="relative flex min-h-screen items-center overflow-hidden pt-16">
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-sage-950/65 via-sage-900/35 to-sage-900/10" />
 
-      <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-20 md:py-32">
+      <div className="container relative z-10 mx-auto max-w-7xl px-4 py-20 sm:px-6 md:py-32 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}

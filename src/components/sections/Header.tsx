@@ -19,7 +19,7 @@ export function Header({ settings }: HeaderProps) {
     : settings.siteName.split(" ").pop() ?? brand.logoText;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-sage-100">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/30 bg-white/75 backdrop-blur-md">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="flex h-16 md:h-18 items-center justify-between gap-4">
           <a href="#" className="flex flex-col shrink-0" aria-label={`${settings.siteName} — на главную`}>
@@ -69,7 +69,7 @@ export function Header({ settings }: HeaderProps) {
 
       <div
         className={cn(
-          "lg:hidden overflow-hidden transition-all duration-300 bg-white border-b border-sage-100",
+          "lg:hidden overflow-hidden transition-all duration-300 border-b border-white/30 bg-white/85 backdrop-blur-md",
           open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         )}
       >

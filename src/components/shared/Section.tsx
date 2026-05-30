@@ -38,9 +38,9 @@ interface SectionWrapperProps {
 
 export function SectionWrapper({ id, children, className, variant = "default" }: SectionWrapperProps) {
   const bg = {
-    default: "bg-white",
-    cream: "bg-cream-50",
-    sage: "bg-sage-50",
+    default: "bg-transparent",
+    cream: "bg-cream-50/30",
+    sage: "bg-sage-50/30",
   };
 
   return (

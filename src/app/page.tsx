@@ -19,6 +19,7 @@ import { OrderForm } from "@/components/sections/OrderForm";
 import { Contacts } from "@/components/sections/Contacts";
 import { Footer } from "@/components/sections/Footer";
 import { FloatingCTA } from "@/components/sections/FloatingCTA";
+import { SiteBackground } from "@/components/shared/SiteBackground";
 import { buildMessengerChannels } from "@/lib/messenger";
 
 export const dynamic = "force-dynamic";
@@ -29,8 +30,9 @@ export default async function HomePage() {
 
   return (
     <>
+      <SiteBackground />
       <Header settings={data.settings} />
-      <main>
+      <main className="relative">
         <Hero settings={data.settings} messengerChannels={messengerChannels} />
         <Benefits />
         <PopularBouquets products={data.popularBouquets} currency={data.currency} />

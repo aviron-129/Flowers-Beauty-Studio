@@ -6,7 +6,7 @@ export function Footer() {
   const { brand, navigation, contacts, footer, social } = siteConfig;
 
   return (
-    <footer className="bg-sage-900 text-sage-200 py-12 md:py-16">
+    <footer className="bg-sage-900/95 py-12 text-sage-200 backdrop-blur-sm md:py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
           <div>

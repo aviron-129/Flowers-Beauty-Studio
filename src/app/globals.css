@@ -27,7 +27,7 @@
   }
 
   body {
-    @apply bg-white text-sage-900 antialiased;
+    @apply bg-transparent text-sage-900 antialiased;
     font-family: var(--font-sans);
   }
 
